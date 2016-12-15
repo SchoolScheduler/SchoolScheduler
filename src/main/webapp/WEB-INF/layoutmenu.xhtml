@@ -10,12 +10,12 @@
     <h:form id="menuform">
 
         <pi:menu widgetVar="IcarusMenu">
-            <p:menuitem id="im_dashboard" value="Übersicht" icon="fa fa-home" outcome="/menu"/>
-            <p:menuitem id="im_components" value="Stundenplan anpassen" icon="fa fa-wrench" outcome="/timetable"/>
-            <p:menuitem id="im_default" value="Notenübersicht" icon="fa fa-pencil-square-o" outcome="/grades"/>
-            <p:menuitem id="im_hierarchy" value="Einstellungen" icon="fa fa-gears" outcome="/settings"/>
-            <p:menuitem id="im_doc" value="Abmelden" icon="fa fa-power-off" outcome="/logout"/>
-            <p:menuitem id="im_db_landing" value="------------" icon="fa fa-certificate" outcome="/promotion-page"/>
+            <p:menuitem value="Übersicht" icon="fa fa-home" outcome="/menu"/>
+            <p:menuitem value="Stundenplan anpassen" icon="fa fa-wrench" outcome="/timetable"/>
+            <p:menuitem value="Notenübersicht" icon="fa fa-pencil-square-o" outcome="/grades"/>
+            <p:menuitem value="Einstellungen" icon="fa fa-gears" outcome="/settings"/>
+            <p:menuitem value="Abmelden" icon="fa fa-power-off" outcome="/logout"/>
+            <p:menuitem value="------------" outcome="/logout"/>
             <p:menuitem id="im_db_landing" value="Promotion Page" icon="fa fa-certificate" outcome="/promotion-page"/>
             <p:submenu id="im_themes" label="Themes" icon="fa fa-paint-brush">
                 <p:menuitem id="im_theme_orange" value="Orange" icon="fa fa-paint-brush" actionListener="#{guestPreferences.setTheme('orange')}" ajax="false" />
