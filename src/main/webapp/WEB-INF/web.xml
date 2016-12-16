@@ -23,6 +23,30 @@
         <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
         <param-value>/WEB-INF/primefaces-icarus.taglib.xml</param-value>
     </context-param>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/logout.xhtml</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/timetable.xhtml</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/settings.xhtml</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/grades.xhtml</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>LoginFilter</filter-name>
+        <url-pattern>/menu.xhtml</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>Character Encoding Filter</filter-name>
+        <servlet-name>Faces Servlet</servlet-name>
+    </filter-mapping>
     <listener>
         <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
     </listener>
@@ -30,10 +54,10 @@
         <filter-name>Character Encoding Filter</filter-name>
         <filter-class>org.primefaces.icarus.filter.CharacterEncodingFilter</filter-class>
     </filter>
-    <filter-mapping>
-        <filter-name>Character Encoding Filter</filter-name>
-        <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping>
+    <filter>
+        <filter-name>LoginFilter</filter-name>
+        <filter-class>ch.SchoolScheduler.LoginFilter</filter-class>
+    </filter>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
