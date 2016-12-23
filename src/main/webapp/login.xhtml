@@ -19,36 +19,39 @@
         <div class="logo-container">
             <h:graphicImage name="images/ourlogo.svg" id="PageLogo" library="icarus-layout"/>
         </div>
-        <div class="ui-g">
-            <p:panel header="Login" styleClass="panel-login">
-                <div class="ui-g-12" style="padding-top:35px;">
-                    <h:outputLabel>Benutzername:</h:outputLabel> <br/>
-                    <p:inputText placeholder="Benutzername" value="#{loginController.username}" style="width:60%;"/><br/>
-                </div>
-                <div class="ui-g-12" style="padding-top:10px;">
-                    <h:outputLabel>Passwort:</h:outputLabel> <br/>
-                    <h:inputSecret value="#{loginController.passwort}" style="width:60%"/>
-                </div>
-                <form>
+        <h:form>
+            <div class="ui-g">
+
+                <p:panel header="Login" styleClass="panel-login">
+                    <div class="ui-g-12" style="padding-top:35px;">
+                        <h:outputLabel>Benutzername:</h:outputLabel> <br/>
+                        <p:inputText placeholder="Benutzername" value="#{loginController.username}" style="width:60%;"/><br/>
+                    </div>
+                    <div class="ui-g-12" style="padding-top:10px;">
+                        <h:outputLabel>Passwort:</h:outputLabel> <br/>
+                        <p:password placeholder="Passwort" value="#{loginController.passwort}" style="width:60%;"/>
+                    </div>
+
                     <div class="ui-g-2"></div>
+
                     <div class="ui-g-8 login-input-container">
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
-                            <p:button value="Login" outcome="#{loginController.login}"></p:button>
+                            <p:commandButton action="#{loginController.login()}" value="Login" ajax="false"/>
                         </div>
                         <div class="ui-g-12 ui-md-6 ui-lg-6">
                             <p:button value="registrieren" outcome="register"></p:button>
                         </div>
                     </div>
-                </form>
-                <div class="ui-g-2"></div>
 
-            </p:panel>
-            <div class="ui-g-12 footer-login">
-                <span>SchoolScheduler</span><br/>
-                <span>All rights reserved.</span>
+                    <div class="ui-g-2"></div>
+                </p:panel>
+
+                <div class="ui-g-12 footer-login">
+                    <span>SchoolScheduler</span><br/>
+                    <span>All rights reserved.</span>
+                </div>
             </div>
-        </div>
-
+        </h:form>
         <style type="text/css">
             html {height: 100%;}
             .ui-button-text, .ui-button-text-only .ui-button-text{padding:8px !important; transition:none !important;}

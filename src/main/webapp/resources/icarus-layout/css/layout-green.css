@@ -419,8 +419,8 @@ body {
       margin-top: 15px;
       text-align: center; }
       .wrapper.slim-menu #sidebar-wrapper #sidebar-header #logo-wrapper img {
-        width: 76px;
-        height: 76px; }
+        width: 30px;
+        height: 30px; }
     .wrapper.slim-menu #sidebar-wrapper #sidebar-header .ui-button {
       cursor: pointer; }
       .wrapper.slim-menu #sidebar-wrapper #sidebar-header .ui-button.ui-state-default {
@@ -456,8 +456,8 @@ body {
       margin-top: 15px;
       text-align: center; }
       .wrapper #sidebar-wrapper #sidebar-header #logo-wrapper img {
-        width: 76px;
-        height: 76px; }
+        width: 30px;
+        height: 30px; }
     .wrapper #sidebar-wrapper #sidebar-header .ui-button {
       cursor: pointer; }
       .wrapper #sidebar-wrapper #sidebar-header .ui-button.ui-state-default {

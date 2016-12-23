@@ -1,12 +1,65 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
-        Hello from Facelets
-    </h:body>
-</html>
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
 
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>PrimeFaces Icarus</title>
+    </h:head>
+
+    <h:body styleClass="containerLogin">
+        <div class="logo-container">
+            <h:graphicImage name="images/ourlogo.svg" id="PageLogo" library="icarus-layout"/>
+        </div>
+        <h:form>
+            <div class="ui-g">
+
+                <p:panel header="Registrieren" styleClass="panel-login">
+                    <div class="ui-g-12" style="padding-top:35px;">
+                        <h:outputLabel>Benutzername:</h:outputLabel> <br/>
+                        <p:inputText placeholder="Benutzername" value="#{loginController.userNew}" style="width:60%;"/><br/>
+                    </div>
+                    <div class="ui-g-12" style="padding-top:10px;">
+                        <h:outputLabel>Passwort:</h:outputLabel> <br/>
+                        <p:password placeholder="Passwort" value="#{loginController.passwortNew}" style="width:60%;"/>
+                    </div>
+                    <div class="ui-g-12" style="padding-top:10px;">
+                        <h:outputLabel>Passwort wiederholen:</h:outputLabel> <br/>
+                        <p:password placeholder="Passwort" value="#{loginController.passwortNewCheck}" style="width:60%;"/>
+                    </div>
+
+                    <div class="ui-g-2"></div>
+
+                    <div class="ui-g-8 login-input-container">
+                        <div class="ui-g-12 ui-md-6 ui-lg-6">
+                            <p:commandButton action="#{loginController.register()}" value="registrieren" ajax="false"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-2"></div>
+                </p:panel>
+
+                <div class="ui-g-12 footer-login">
+                    <span>SchoolScheduler</span><br/>
+                    <span>All rights reserved.</span>
+                </div>
+            </div>
+        </h:form>
+        <style type="text/css">
+            html {height: 100%;}
+            .ui-button-text, .ui-button-text-only .ui-button-text{padding:8px !important; transition:none !important;}
+            .ui-panel .ui-panel-title {font-size: 17px;}
+        </style>
+
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="icarus-layout" />
+    </h:body>
+
+</html>

@@ -6,13 +6,16 @@
  * Änderungen:     DATUM WER WAS
  * Beschreibung:   BESCHREIBUNG
  */
-package ch.schoolscheduler;
+package ch.SchoolScheduler;
 
 import java.io.Serializable;
+import java.security.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
+import javax.inject.Inject;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -40,6 +43,9 @@ public class loginController implements Serializable {
 
     private boolean loggedIn = false;
 
+    @Inject
+    private Controller c;
+
     /**
      * Creates a new instance of LoginController
      */
@@ -47,17 +53,39 @@ public class loginController implements Serializable {
     }
 
     public String login() {
-        if (username.equals("admin") && passwort.equals("1234")) {
-            this.loggedIn = true;
+
+        if (username != null && username.equals("admin") && passwort != null && passwort.equals("admin")) {
+            loggedIn = true;
             //SessionID verändern um Sessionfixation vorzubeugen
-//            ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).changeSessionId();
+            //((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).changeSessionId();
             return "menu?faces-redirect=true";
         }
-        return "/login";
+        return "login";
     }
 
     public String register() {
-        return "";
+        if (!passwortNew.equals(passwortNewCheck)) {
+            
+            return "register";
+            
+        } else if (c.createNewUser(userNew, passwortNew)) {
+            
+        }
+        return "login";
+    }
+
+    public String MD5(String md5) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+            byte[] array = md.digest(md5.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1, 3));
+            }
+            return sb.toString();
+        } catch (java.security.NoSuchAlgorithmException e) {
+        }
+        return null;
     }
 
     public String getUserNew() {
