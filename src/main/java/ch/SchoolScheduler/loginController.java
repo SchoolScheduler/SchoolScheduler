@@ -41,7 +41,9 @@ public class loginController implements Serializable {
     @Pattern(regexp = "^[a-zA-Z0-9]*$^-_:;,.+#@%&/()=", message = "PW oder User nicht korrekt.")
     private String passwortNewCheck;
 
-    private boolean loggedIn = false;
+    private boolean loggedIn = true;
+
+    private String correctMessage = "";
 
     @Inject
     private Controller c;
@@ -62,14 +64,23 @@ public class loginController implements Serializable {
         }
         return "login";
     }
+    
+//    public String login() {
+//        if (c.login(username, this.MD5(passwort))) {
+//            loggedIn = true;
+//            //SessionID verändern um Sessionfixation vorzubeugen
+//            //((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).changeSessionId();
+//            return "menu?faces-redirect=true";
+//        }
+//        return "login";
+//    }
 
     public String register() {
         if (!passwortNew.equals(passwortNewCheck)) {
-            
+            this.correctMessage = "Die Passwörter stimmen nicht überein";
             return "register";
-            
-        } else if (c.createNewUser(userNew, passwortNew)) {
-            
+        } else if (c.createNewUser(userNew, this.MD5(passwortNew))) {
+            this.correctMessage = "";
         }
         return "login";
     }
@@ -90,6 +101,14 @@ public class loginController implements Serializable {
 
     public String getUserNew() {
         return userNew;
+    }
+
+    public String getCorrectMessage() {
+        return correctMessage;
+    }
+
+    public void setCorrectMessage(String correctMessage) {
+        this.correctMessage = correctMessage;
     }
 
     public void setUserNew(String userNew) {

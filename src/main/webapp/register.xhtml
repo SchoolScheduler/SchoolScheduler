@@ -35,6 +35,9 @@
                         <h:outputLabel>Passwort wiederholen:</h:outputLabel> <br/>
                         <p:password placeholder="Passwort" value="#{loginController.passwortNewCheck}" style="width:60%;"/>
                     </div>
+                    <div class="ui-g-12" style="padding-top:10px; color: red;">
+                        <h:outputLabel value="#{loginController.correctMessage}"/>
+                    </div>
 
                     <div class="ui-g-2"></div>
 

@@ -13,6 +13,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -26,6 +28,13 @@ import javax.persistence.EntityManager;
 public class Controller implements Serializable {
 
     private EntityManager em;
+    private String fachName;
+    private String lehrperson = null;
+    private float note;
+    private int pruefungsId;
+
+    private int currentlyLoggedIn;
+
     /**
      * Creates a new instance of Controller
      */
@@ -53,8 +62,8 @@ public class Controller implements Serializable {
         try {
             ps = con.prepareStatement("SELECT name FROM benutzer");
             rs = ps.executeQuery();
-            while(rs.next()){
-                if(user.equals(rs.getString(1))){
+            while (rs.next()) {
+                if (user.equals(rs.getString(1))) {
                     return false;
                 }
             }
@@ -68,6 +77,134 @@ public class Controller implements Serializable {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+
+    public boolean login(String user, String passwort) {
+        ResultSet rs;
+        Connection con = this.getConnection();
+        PreparedStatement ps;
+        try {
+            ps = con.prepareStatement("SELECT id, name, passwort FROM benutzer");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                if (user.equals(rs.getString(2)) && passwort.equals(rs.getString(3))) {
+                    this.currentlyLoggedIn = rs.getInt(1);
+                    return true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public String createNewFach() {
+        ResultSet rs;
+        Connection con = this.getConnection();
+        PreparedStatement ps;
+
+        int fachId;
+
+        Faecher neu = new Faecher();
+        neu.setName(fachName);
+        neu.setLehrperson(lehrperson);
+
+        em.getTransaction().begin();
+        em.persist(neu);
+        em.getTransaction().commit();
+
+        try {
+            ps = con.prepareStatement("SELECT MAX(id) FROM faecher");
+            rs = ps.executeQuery();
+            rs.next();
+            fachId = rs.getInt(1);
+
+            ps = con.prepareStatement("INSERT INTO benutzer_faecher (Benuter_id, Faecher_id) VALUES (?,?)");
+            ps.setInt(1, this.currentlyLoggedIn);
+            ps.setInt(2, fachId);
+            ps.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "grades";
+    }
+
+    public List<Fach> getAllFaecher() {
+        List<Fach> faecher = new ArrayList();
+        ResultSet rs;
+        Connection con = this.getConnection();
+        PreparedStatement ps;
+        try {
+            ps = con.prepareStatement("SELECT f.name, f.lehrperson FROM faecher f JOIN benutzer_faecher bf ON f.id=bf.Faecher_id JOIN benutzer b ON bf.Benutzer_id=b.id WHERE b.id=?;");
+            ps.setInt(1, currentlyLoggedIn);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Fach fach = new Fach();
+                fach.setName(rs.getString(1));
+                fach.setLehrperson(rs.getString(2));
+                faecher.add(fach);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return faecher;
+    }
+
+    public List<pruefung> allPruefungen() {
+        List<pruefung> pruefungen = new ArrayList();
+        ResultSet rs;
+        Connection con = this.getConnection();
+        PreparedStatement ps;
+        try {
+            ps = con.prepareStatement("SELECT p.name, f.name fach, p.note, p.gewichtung, p.datum FROM pruefungen p JOIN benutzer b ON p.Benutzer_id=b.id JOIN faecher f ON p.Faecher_id=f.id WHERE b.id=? AND p.note IS NULL;");
+            ps.setInt(1, currentlyLoggedIn);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                pruefung test = new pruefung();
+                test.setName(rs.getString(1));
+                test.setFach(rs.getString(2));
+                test.setGewichtung(rs.getFloat(3));
+                test.setNote(rs.getFloat(4));
+                test.setDatum(rs.getDate(5));           //AUFPASSEN DATUM SQL UND DATUM JAVA.UTIL
+                pruefungen.add(test);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pruefungen;
+    }
+
+    public String getFachName() {
+        return fachName;
+    }
+
+    public void setFachName(String fachName) {
+        this.fachName = fachName;
+    }
+
+    public String getLehrperson() {
+        return lehrperson;
+    }
+
+    public void setLehrperson(String lehrperson) {
+        this.lehrperson = lehrperson;
+    }
+
+    public float getNote() {
+        return note;
+    }
+
+    public void setNote(float note) {
+        this.note = note;
+    }
+
+    public int getPruefungsId() {
+        return pruefungsId;
+    }
+
+    public void setPruefungsId(int pruefungsId) {
+        this.pruefungsId = pruefungsId;
     }
 
 }

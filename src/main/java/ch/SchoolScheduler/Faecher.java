@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -37,6 +38,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Faecher.findByName", query = "SELECT f FROM Faecher f WHERE f.name = :name")})
 public class Faecher implements Serializable {
 
+    @ManyToMany(mappedBy = "faecherCollection")
+    private Collection<Benutzer> benutzerCollection;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "faecher")
+    private Collection<Pruefungen> pruefungenCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,12 +54,10 @@ public class Faecher implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "name")
     private String name;
-    @ManyToMany(mappedBy = "faecherCollection")
-    private Collection<Benutzer> benutzerCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "faecher")
-    private Collection<Hausaufgaben> hausaufgabenCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "faecher")
-    private Collection<Pruefungen> pruefungenCollection;
+    @Lob
+    @Size(max = 65535)
+    @Column(name = "lehrperson")
+    private String lehrperson;
 
     public Faecher() {
     }
@@ -83,31 +87,12 @@ public class Faecher implements Serializable {
         this.name = name;
     }
 
-    @XmlTransient
-    public Collection<Benutzer> getBenutzerCollection() {
-        return benutzerCollection;
+    public String getLehrperson() {
+        return lehrperson;
     }
 
-    public void setBenutzerCollection(Collection<Benutzer> benutzerCollection) {
-        this.benutzerCollection = benutzerCollection;
-    }
-
-    @XmlTransient
-    public Collection<Hausaufgaben> getHausaufgabenCollection() {
-        return hausaufgabenCollection;
-    }
-
-    public void setHausaufgabenCollection(Collection<Hausaufgaben> hausaufgabenCollection) {
-        this.hausaufgabenCollection = hausaufgabenCollection;
-    }
-
-    @XmlTransient
-    public Collection<Pruefungen> getPruefungenCollection() {
-        return pruefungenCollection;
-    }
-
-    public void setPruefungenCollection(Collection<Pruefungen> pruefungenCollection) {
-        this.pruefungenCollection = pruefungenCollection;
+    public void setLehrperson(String lehrperson) {
+        this.lehrperson = lehrperson;
     }
 
     @Override
@@ -133,6 +118,24 @@ public class Faecher implements Serializable {
     @Override
     public String toString() {
         return "ch.SchoolScheduler.Faecher[ id=" + id + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Benutzer> getBenutzerCollection() {
+        return benutzerCollection;
+    }
+
+    public void setBenutzerCollection(Collection<Benutzer> benutzerCollection) {
+        this.benutzerCollection = benutzerCollection;
+    }
+
+    @XmlTransient
+    public Collection<Pruefungen> getPruefungenCollection() {
+        return pruefungenCollection;
+    }
+
+    public void setPruefungenCollection(Collection<Pruefungen> pruefungenCollection) {
+        this.pruefungenCollection = pruefungenCollection;
     }
     
 }

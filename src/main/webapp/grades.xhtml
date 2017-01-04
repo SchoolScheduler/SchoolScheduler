@@ -276,6 +276,7 @@
 
         <div class="ui-g ui-fluid">
             <div class="ui-g-12 ui-lg-6">
+
                 <div class="card">
                     <h1 class="centerText">Linear Chart</h1>
                     <p:chart id="line" type="line" model="#{chartDemoView.lineModel1}" responsive="true"/>
@@ -290,15 +291,86 @@
                     <h1 class="centerText">Bar Chart</h1>
                     <p:chart id="bar" type="bar" model="#{chartDemoView.barModel}" responsive="true"/>
                 </div>
-
             </div>
-            
+
             <div class="ui-g-12 ui-lg-6">
-                
+                <div class="ui-g-12 ui-md-6">
+                    <h:form>
+                        <p:panel header="Neues Schulfach erstellen" style="background:#fff;">
+                            <div class="ui-g-12">
+                                <div class="ui-g-12">
+                                    <p:inputText placeholder="Bezeichnung des Faches" required="true" value="#{controller.fachName}"/>
+                                </div>
+                                <div class="ui-g-12">
+                                    <p:inputText placeholder="Name der Lehrperson" value="#{controller.lehrperson}"/>
+                                </div>
+                            </div>
+                            <p:commandButton type="button" value="#{controller.createNewFach}" icon="fa fa-check"></p:commandButton>
+                        </p:panel>
+                    </h:form>
+                </div>
+
+                <div class="ui-g-12 ui-md-6">
+                    <p:panel header="Vorhandene Fächer">
+                        <p:dataTable var="Fach" value="#{controller.getAllFaecher()}" selectionMode="single" reflow="true">
+
+                            <p:column headerText="Fach" sortBy="#{Fach.name}">
+                                <h:outputText value="#{Fach.name}" />
+                            </p:column>
+
+                            <p:column headerText="Lehrperson">
+                                <h:outputText value="#{Fach.lehrperson}" />
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:panel>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <h:form>
+                        <p:panel header="Note eintragen" style="background:#fff;">
+                            <div class="ui-g-12">
+                                <div class="ui-g-12">
+                                    <p:selectOneMenu id="console" value="#{controller.note}" autoWidth="false" required="true">
+                                        <f:selectItems value="#{controller.allPendingPruefungen()}" />
+                                    </p:selectOneMenu>
+                                </div>
+                                <div class="ui-g-12">
+                                    <p:inputNumber placeholder="Note (1,000-6,000)" minValue="1,000" maxValue="6,000" required="true"/>
+                                </div>
+                            </div>
+                            <p:commandButton type="button" value="Eintragen" icon="fa fa-check"></p:commandButton>
+                        </p:panel>
+                    </h:form>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <p:panel header="Noten">
+                        <p:dataTable var="test" value="#{controller.allPruefungen()}" selectionMode="single" reflow="true">
+
+                            <p:column headerText="Prüfung">
+                                <h:outputText value="#{test.name}" />
+                            </p:column>
+
+                            <p:column headerText="Fach">
+                                <h:outputText value="#{test.fach}" />
+                            </p:column>
+
+                            <p:column headerText="Note">
+                                <h:outputText value="#{test.note}" />
+                            </p:column>
+
+                            <p:column headerText="Gewichtung">
+                                <h:outputText value="#{test.gewichtung}" />
+                            </p:column>
+
+                            <p:column headerText="Datum" sortBy="#{test.datum}">
+                                <h:outputText value="#{test.datum}" />
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:panel>
+                </div>
             </div>
-            
+
         </div>
-
     </ui:define>
-
 </ui:composition>
