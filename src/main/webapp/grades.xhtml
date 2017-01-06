@@ -330,8 +330,8 @@
                         <p:panel header="Note eintragen" style="background:#fff;">
                             <div class="ui-g-12">
                                 <div class="ui-g-12">
-                                    <p:selectOneMenu id="console" var="test" value="#{controller.allPendingPruefungen()}" autoWidth="false" required="true">
-                                        <f:selectItems itemLabel="#{test.name}" value="#{controller.pruefungsId}"/>
+                                    <p:selectOneMenu id="console" var="test" value="#{controller.pruefungsId}" autoWidth="false" required="true">
+                                        <f:selectItems itemLabel="#{controller.allPendingPruefungen().name}" itemValue="#{controller.allPendingPruefungen().id}"/>
                                     </p:selectOneMenu>
                                 </div>
                                 <div class="ui-g-12">
