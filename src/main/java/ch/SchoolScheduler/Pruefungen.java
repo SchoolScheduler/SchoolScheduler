@@ -54,7 +54,7 @@ public class Pruefungen implements Serializable {
     private String name;
     @Basic(optional = false)
     @Column(name = "note")
-    private float note;
+    private float note = Float.valueOf(0);
     @Basic(optional = false)
     @NotNull
     @Column(name = "gewichtung")

@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,12 +29,16 @@ import javax.persistence.EntityManager;
 public class Controller implements Serializable {
 
     private EntityManager em;
+    private int fachId;
     private String fachName;
     private String lehrperson = null;
     private float note;
     private int pruefungsId;
+    private java.util.Date pruefungsDatum;
+    private String pruefungsName;
 
     private int currentlyLoggedIn;
+    private float gewichtung;
 
     /**
      * Creates a new instance of Controller
@@ -103,7 +108,7 @@ public class Controller implements Serializable {
         Connection con = this.getConnection();
         PreparedStatement ps;
 
-        int fachId;
+        int fachIdnew;
 
         Faecher neu = new Faecher();
         neu.setName(fachName);
@@ -117,7 +122,7 @@ public class Controller implements Serializable {
             ps = con.prepareStatement("SELECT MAX(id) FROM faecher");
             rs = ps.executeQuery();
             rs.next();
-            fachId = rs.getInt(1);
+            fachIdnew = rs.getInt(1);
 
             ps = con.prepareStatement("INSERT INTO benutzer_faecher (Benuter_id, Faecher_id) VALUES (?,?)");
             ps.setInt(1, this.currentlyLoggedIn);
@@ -136,13 +141,14 @@ public class Controller implements Serializable {
         Connection con = this.getConnection();
         PreparedStatement ps;
         try {
-            ps = con.prepareStatement("SELECT f.name, f.lehrperson FROM faecher f JOIN benutzer_faecher bf ON f.id=bf.Faecher_id JOIN benutzer b ON bf.Benutzer_id=b.id WHERE b.id=?;");
+            ps = con.prepareStatement("SELECT f.id, f.name, f.lehrperson FROM faecher f JOIN benutzer_faecher bf ON f.id=bf.Faecher_id JOIN benutzer b ON bf.Benutzer_id=b.id WHERE b.id=?;");
             ps.setInt(1, currentlyLoggedIn);
             rs = ps.executeQuery();
             while (rs.next()) {
                 Fach fach = new Fach();
-                fach.setName(rs.getString(1));
-                fach.setLehrperson(rs.getString(2));
+                fach.setId(rs.getInt(1));
+                fach.setName(rs.getString(2));
+                fach.setLehrperson(rs.getString(3));
                 faecher.add(fach);
             }
         } catch (SQLException ex) {
@@ -151,7 +157,7 @@ public class Controller implements Serializable {
         return faecher;
     }
 
-    public List<pruefung> allPruefungen() {
+    public List<pruefung> allPendingPruefungen() {
         List<pruefung> pruefungen = new ArrayList();
         ResultSet rs;
         Connection con = this.getConnection();
@@ -175,6 +181,63 @@ public class Controller implements Serializable {
         return pruefungen;
     }
 
+    public List<pruefung> allPruefungen() {
+        List<pruefung> pruefungen = new ArrayList();
+        ResultSet rs;
+        Connection con = this.getConnection();
+        PreparedStatement ps;
+        try {
+            ps = con.prepareStatement("SELECT p.name, f.name fach, p.note, p.gewichtung, p.datum FROM pruefungen p JOIN benutzer b ON p.Benutzer_id=b.id JOIN faecher f ON p.Faecher_id=f.id WHERE b.id=? AND p.note>0");
+            ps.setInt(1, currentlyLoggedIn);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                pruefung test = new pruefung();
+                test.setName(rs.getString(1));
+                test.setFach(rs.getString(2));
+                test.setGewichtung(rs.getFloat(3));
+                test.setNote(rs.getFloat(4));
+                test.setDatum(rs.getDate(5));           //AUFPASSEN DATUM SQL UND DATUM JAVA.UTIL
+                pruefungen.add(test);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return pruefungen;
+    }
+
+    public String noteEintragen() {
+        ResultSet rs;
+        Connection con = this.getConnection();
+        PreparedStatement ps;
+        try {
+            ps = con.prepareStatement("UPDATE pruefungen SET note=? WHERE id=? AND Benutzer_id=? AND note=0;");
+            ps.setFloat(1, this.note);
+            ps.setInt(2, pruefungsId);
+            ps.setInt(3, this.currentlyLoggedIn);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "grades";
+    }
+
+    public String createNewPruefung() {
+        Connection con = this.getConnection();
+        PreparedStatement ps;
+        try {
+            ps = con.prepareStatement("INSERT INTO pruefungen (Faecher_id, datum, Benutzer_id, name, gewichtung) VALUES (?,?,?,?,?)");
+            ps.setInt(1, this.fachId);
+            ps.setDate(2, new java.sql.Date(pruefungsDatum.getTime()));
+            ps.setInt(3, this.currentlyLoggedIn);
+            ps.setString(4, this.pruefungsName);
+            ps.setFloat(5, this.gewichtung);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "menu";
+    }
+
     public String getFachName() {
         return fachName;
     }
@@ -195,8 +258,9 @@ public class Controller implements Serializable {
         return note;
     }
 
-    public void setNote(float note) {
-        this.note = note;
+    public void setNote(String note) {
+        float grade = Float.valueOf(note);
+        this.note = grade;
     }
 
     public int getPruefungsId() {
@@ -205,6 +269,38 @@ public class Controller implements Serializable {
 
     public void setPruefungsId(int pruefungsId) {
         this.pruefungsId = pruefungsId;
+    }
+
+    public Date getPruefungsDatum() {
+        return pruefungsDatum;
+    }
+
+    public void setPruefungsDatum(Date pruefungsDatum) {
+        this.pruefungsDatum = pruefungsDatum;
+    }
+
+    public int getFachId() {
+        return fachId;
+    }
+
+    public void setFachId(int fachId) {
+        this.fachId = fachId;
+    }
+
+    public String getPruefungsName() {
+        return pruefungsName;
+    }
+
+    public void setPruefungsName(String pruefungsName) {
+        this.pruefungsName = pruefungsName;
+    }
+
+    public float getGewichtung() {
+        return gewichtung;
+    }
+
+    public void setGewichtung(float gewichtung) {
+        this.gewichtung = gewichtung;
     }
 
 }

@@ -45,24 +45,26 @@
             </div>
             <div class="ui-g-12 ui-md-2">
                 <h:form>
-                    <p:panel header="Note eintragen" style="background:#fff;">
+                    <p:panel header="Test" style="background:#fff;">
                         <div class="ui-g-12">
                             <div class="ui-g-12">
-                                <p:inputText placeholder="Bezeichnung" required="true"/>
+                                <p:inputText placeholder="Bezeichnung" value="#{controller.pruefungsName}" required="true"/>
                             </div>
                             <div class="ui-g-12">
-                                <p:selectOneMenu id="console" value="#{selectOneMenuView.console}" autoWidth="false" required="true">
-                                    <f:selectItem itemLabel="Mathematik" itemValue="" />
-                                    <f:selectItem itemLabel="Geschichte" itemValue="Xbox One" />
-                                    <f:selectItem itemLabel="Französisch" itemValue="PS4" />
-                                    <f:selectItem itemLabel="Informatik" itemValue="Wii U" />
+                                    <p:inputNumber placeholder="Gewichtung der Note (mind. 0,001)" minValue="0,001" value="#{controller.gewichtung}" required="true"/>
+                                </div>
+                            <div class="ui-g-12">
+                                <p:selectOneMenu id="console" value="#{controller.fachId}" autoWidth="false" required="true">
+                                    <f:selectItems itemLabel="#{controller.getAllFaecher().name}" itemValue="#{controller.getAllFaecher().id}" />
                                 </p:selectOneMenu>
                             </div>
                             <div class="ui-g-12">
-                                <p:calendar id="button" locale="de" navigator="true" pattern="dd.MM.yyyy" required="true"/>
+                                <p:calendar id="button" value="#{controller.pruefungsDatum}" locale="de" navigator="true"  required="true">
+                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                </p:calendar>
                             </div>
                         </div>
-                        <p:commandButton type="button" value="Send" icon="fa fa-check"></p:commandButton>
+                        <p:commandButton type="button" value="#{controller.createNewPruefung()}" icon="fa fa-check"></p:commandButton>
                     </p:panel>
                 </h:form>
             </div>

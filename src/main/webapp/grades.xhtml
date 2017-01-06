@@ -330,15 +330,15 @@
                         <p:panel header="Note eintragen" style="background:#fff;">
                             <div class="ui-g-12">
                                 <div class="ui-g-12">
-                                    <p:selectOneMenu id="console" value="#{controller.note}" autoWidth="false" required="true">
-                                        <f:selectItems value="#{controller.allPendingPruefungen()}" />
+                                    <p:selectOneMenu id="console" var="test" value="#{controller.allPendingPruefungen()}" autoWidth="false" required="true">
+                                        <f:selectItems itemLabel="#{test.name}" value="#{controller.pruefungsId}"/>
                                     </p:selectOneMenu>
                                 </div>
                                 <div class="ui-g-12">
-                                    <p:inputNumber placeholder="Note (1,000-6,000)" minValue="1,000" maxValue="6,000" required="true"/>
+                                    <p:inputNumber placeholder="Note (1,000-6,000)" minValue="1,000" maxValue="6,000" value="#{controller.note}" required="true"/>
                                 </div>
                             </div>
-                            <p:commandButton type="button" value="Eintragen" icon="fa fa-check"></p:commandButton>
+                            <p:commandButton type="button" value="#{controller.noteEintragen()}" icon="fa fa-check"></p:commandButton>
                         </p:panel>
                     </h:form>
                 </div>
