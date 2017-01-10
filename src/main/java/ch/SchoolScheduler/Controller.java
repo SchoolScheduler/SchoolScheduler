@@ -13,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,18 +37,30 @@ public class Controller implements Serializable {
     private int pruefungsId;
     private java.util.Date pruefungsDatum;
     private String pruefungsName;
+    private GradeCharts gc = createGradeCharts();
 
     private int currentlyLoggedIn;
     private float gewichtung;
 
     /**
      * Creates a new instance of Controller
+     *
+     * @throws java.text.ParseException
      */
-    public Controller() {
+    public Controller() throws ParseException {
+    }
+
+    private GradeCharts createGradeCharts() {
+        try {
+            return new GradeCharts();
+        } catch (ParseException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     //Diese methode bietet die Anbindung an die Datenbank
-    private Connection getConnection() {
+    public Connection getConnection() {
         String url = "jdbc:mysql://localhost:3306/schoolschedulerdb";
         String username = "root";
         String password = "";
@@ -303,4 +316,29 @@ public class Controller implements Serializable {
         this.gewichtung = gewichtung;
     }
 
+    public EntityManager getEm() {
+        return em;
+    }
+
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
+
+    public int getCurrentlyLoggedIn() {
+        return currentlyLoggedIn;
+    }
+
+    public void setCurrentlyLoggedIn(int currentlyLoggedIn) {
+        this.currentlyLoggedIn = currentlyLoggedIn;
+    }
+
+    public GradeCharts getGc() {
+        return gc;
+    }
+
+    public void setGc(GradeCharts gc) {
+        this.gc = gc;
+    }
+
+    
 }

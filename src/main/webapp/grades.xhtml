@@ -278,18 +278,8 @@
             <div class="ui-g-12 ui-lg-6">
 
                 <div class="card">
-                    <h1 class="centerText">Linear Chart</h1>
-                    <p:chart id="line" type="line" model="#{chartDemoView.lineModel1}" responsive="true"/>
-                </div>
-
-                <div class="card">
-                    <h1 class="centerText">Bar And Line Chart</h1>
-                    <p:chart id="combined" type="bar" model="#{chartDemoView.combinedModel}" responsive="true" />
-                </div>
-
-                <div class="card">
-                    <h1 class="centerText">Bar Chart</h1>
-                    <p:chart id="bar" type="bar" model="#{chartDemoView.barModel}" responsive="true"/>
+                    <h1 class="centerText">Notendurchschnitt</h1>
+                    <p:chart id="line" type="line" model="#{controller.gc}" responsive="true"/>
                 </div>
             </div>
 
